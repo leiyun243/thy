@@ -48,6 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserVO> selectUserList(UserVO userVO) {
+        System.out.println("查询所有用户信息");
         UserModel model = new UserModel(userVO);
         List<UserModel> modelList = this.userDao.selectUserList(model);
         if(modelList.isEmpty()){
