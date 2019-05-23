@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.10.2.js}"></script>
+    <script type="text/javascript" th:src="@{/js/pubFun.js}"></script>
+</head>
+<body>
+<form id="login_from" onclick="return false">
+
+<table>
+    <tbody>
+        <tr>
+            <td>用户名：</td>
+            <td colspan="2"><input type="text" name="username" placeholder="登录用户名" /></td>
+        </tr>
+        <tr>
+            <td>登录密码：</td>
+            <td colspan="2">
+                <input type="text" name="password" onfocus="this.type='password'" autocomplete="off" placeholder="登录密码">
+            </td>
+        </tr>
+        <tr>
+            <td>图形验证码：</td>
+            <td><input type="text" id="vrifyCode" placeholder="验证码" /></td>
+            <td><img alt="验证码" onclick="this.src='getVrifyCode?d='+new Date()*1"
+                     src="getVrifyCode"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="2"> <button onclick="fnLogin()">登录</button> </td>
+        </tr>
+
+    </tbody>
+
+</table>
+</form>
+
+<script th:inline="javascript">
+
+    var context = [[@{/}]];
+
+    function fnLogin() {
+
+        var username = $('[name="username"]').val();
+        var password = $('[name="password"]').val();
+        var code = $('#vrifyCode').val();
+        if(username == ""){
+            alert("请输入用户名");
+            return ;
+        }
+        if(password == ""){
+            alert("请输入登录密码");
+            return ;
+        }
+        if(code == ""){
+            alert("请输入图形验证码");
+            return ;
+        }
+
+        var flg = fnMacthCode(code);
+        console.log(flg)
+        if(flg == false){
+            alert("图形验证码错误");
+            return ;
+        }
+
+        var url = context+"logon";
+        $.ajaxPost(url,{"username":username,"password":password},function (data) {
+            if(data.statusCode == 200){
+                window.location = context+"index";
+            }else{
+                alert("用户名或密码错误");
+            }
+        });
+
+    }
+
+
+    function fnMacthCode(code) {
+        var flg = false;
+        console.log(1);
+        var url = context+"matchVrifyCode";
+        $.ajaxPostSync(url,{"vrifyCode":code},function (data) {
+            console.log(data);
+            if(data.statusCode == 200){
+                flg = true;
+                console.log(2);
+            }
+        });
+        console.log(3);
+        return flg;
+    }
+
+</script>
+
+</body>
+</html>

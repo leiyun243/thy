@@ -1,0 +1,7 @@
+@CHARSET "UTF-8";
+.PagerView { color: #333; text-align: right; margin: 20px 0 10px 0; }
+.PagerView span { border: #bbb 1px solid;padding:2px 5px;margin: 2px; color: #bbb; }
+.PagerView span.on { border: #168bd8 1px solid; padding:2px 5px; font-weight: bold; margin: 2px; color: #fff;  background: #168bd8;}
+.PagerView a { color: #00f; text-decoration: none; }
+.PagerView a span { border: #a9d2e9 1px solid; padding:2px 5px; margin: 2px; color: #168bd8;  text-decoration: none }
+.PagerView a:hover span { border: #168bd8 1px solid;  color: #000; }

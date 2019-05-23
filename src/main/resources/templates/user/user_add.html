@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>添加管理员</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+    <link rel="shortcut icon" th:href="@{favicon.ico}" type="image/x-icon" />
+    <link rel="stylesheet" th:href="@{/css/font.css}">
+    <link rel="stylesheet" th:href="@{/css/xadmin.css}">
+
+    <script type="text/javascript" th:src="@{/js/jquery.min.js}"></script>
+    <script type="text/javascript" th:src="@{/lib/layui/layui.js}" charset="utf-8"></script>
+    <script type="text/javascript" th:src="@{/js/xadmin.js}"></script>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form" id="add-form" onclick="return false">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>用户名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="username" required lay-verify="required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>手机号
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="userPhone" required lay-verify="phone"
+                       autocomplete="off" class="layui-input">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="userEemail" required lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>真实姓名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="realName" required class="layui-input">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red"></span>所属部门
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="department" class="layui-input">
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <labelclass="layui-form-label">
+                <span class="x-red">*</span>密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" required lay-verify="pass"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                6到16个字符
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                <span class="x-red">*</span>确认密码
+            </label>
+            <div class="layui-input-inline">
+                <input type="password" name="rePassword" required lay-verify="repass"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+            </label>
+            <button  class="layui-btn" lay-filter="add" onclick="fnSave()">
+                增加
+            </button>
+        </div>
+    </form>
+</div>
+
+<script th:inline="javascript">
+
+    var context = [[@{/}]];
+
+    function fnSave() {
+        var username = $('[name="username"]').val();
+        var userPhone = $('[name="userPhone"]').val();
+        var userEemail = $('[name="userEemail"]').val();
+        var realName = $('[name="realName"]').val();
+        var department = $('[name="department"]').val();
+        var password = $('[name="password"]').val();
+        var rePassword = $('[name="rePassword"]').val();
+
+        if(username == ""){
+            layer.alert("请输入用户名");
+            return false;
+        }
+        if(userPhone == ""){
+            layer.alert("请输入手机号");
+            return false;
+        }
+        if(userEemail == ""){
+            layer.alert("请输入邮箱");
+            return false;
+        }
+        if(realName == ""){
+            layer.alert("请输入真实姓名");
+            return false;
+        }
+        if(password == ""){
+            layer.alert("请输入密码");
+            return false;
+        }
+        if(rePassword == ""){
+            layer.alert("请输入确认密码");
+            return false;
+        }
+
+        //用户名、手机号、邮箱 唯一验证
+
+        var form = new FormData(document.getElementById("add-form"));
+        var url = context + "user/addUser";
+        $.ajaxForm(url,form,function(data){
+
+            if(data.statusCode == 200){
+                //延迟刷新父页面
+                window.setTimeout(function(){
+                    window.parent.location.reload();
+                },1200);
+            }else{
+                layer.alert(data.message);
+            }
+        });
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ad.thy.dao.UserDao">
+
+    <!-- 数据库字段与实体类字段的映射，column是数据库的列名，property是实体类的属性名 -->
+    <resultMap id="UserBaseResultMap" type="com.ad.thy.model.UserModel">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_uuid" jdbcType="VARCHAR" property="userUUID"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="creator_time" jdbcType="TIMESTAMP" property="creatorTime"/>
+    </resultMap>
+
+    <!-- 查询单个 -->
+    <resultMap id="SelectUserOneMap" type="com.ad.thy.model.UserModel">
+        <id column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_uuid" jdbcType="VARCHAR" property="userUUID"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="creator_time" jdbcType="TIMESTAMP" property="creatorTime"/>
+    </resultMap>
+
+    <!-- 新增用户，id就是方法名 -->
+    <insert id="insertUser">
+        insert into auth_user (username,password) values (#{username},#{password})
+    </insert>
+
+    <!-- 删除用户，id就是方法名，parameterType可以写，也可以不写。 -->
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from auth_user where user_id = #{userId,jdbcType=INTEGER}
+    </delete>
+
+    <!-- 修改用户 -->
+    <update id="updateUser">
+        update auth_user set username = #{username},password =#{password} where user_id = #{id}
+    </update>
+
+    <sql id="CommonColumn">
+        AU.user_id,
+        AU.user_uuid,
+        AU.username,
+        AU.`password`,
+        AU.real_name,
+        AU.department,
+        AU.user_phone,
+        AU.user_email,
+        AU.is_admin,
+        AU.creator_id,
+        AU.creator_name,
+        AU.creator_time
+    </sql>
+
+    <select id="selectUserOne" parameterType="com.ad.thy.model.UserModel" resultMap="SelectUserOneMap">
+        select
+            <include refid="CommonColumn"/>
+        from auth_user AU
+        where 1 = 1
+            <include refid="CommonWhere"/>
+    </select>
+
+
+    <sql id="CommonWhere">
+        <if test="userUUID != null and userUUID != ''">
+            and AU.user_uuid = #{userUUID}
+        </if>
+        <if test="userId != null">
+            and AU.user_id = #{userId}
+        </if>
+        <if test="username != null and username != ''">
+            and AU.username = #{username}
+        </if>
+        <if test="password != null and password != ''">
+            and AU.`password` = #{password}
+        </if>
+    </sql>
+
+    <!-- 查询次数 -->
+    <select id="selectUserListCount" parameterType="com.ad.thy.model.UserModel" resultType="java.lang.Integer">
+        select count(1) from auth_user AU
+        where 1=1
+        <include refid="CommonWhere"/>
+    </select>
+
+    <!-- 查询所有用户 -->
+    <select id="selectUserList" parameterType="com.ad.thy.model.UserModel" resultMap="UserBaseResultMap">
+        select
+          <include refid="CommonColumn"/>
+        from auth_user AU
+        where 1=1
+        <include refid="CommonWhere"/>
+    </select>
+
+</mapper>
