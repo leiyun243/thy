@@ -21,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer insertUser(UserVO userVO) {
+        //vo转model
         UserModel model = new UserModel(userVO);
         return this.userDao.insertUser(model);
     }
